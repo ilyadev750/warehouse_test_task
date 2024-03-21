@@ -1,9 +1,9 @@
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
 from sqlalchemy import ForeignKey
-from sqlalchemy import UniqueConstraint, CheckConstraint
+from sqlalchemy import UniqueConstraint
 from sqlalchemy.orm import mapped_column
-from sqlalchemy import String
+from sqlalchemy import String, INTEGER
 from sqlalchemy.orm import relationship
 from typing import List
 
@@ -43,7 +43,7 @@ class MainShelve(Base):
 class Good(Base):
 
     __tablename__ = "goods"
-    
+
     id: Mapped[int] = mapped_column(primary_key=True)
     model_name: Mapped[str] = mapped_column(String(50))
     category_id: Mapped[int] = mapped_column(
@@ -54,6 +54,7 @@ class Good(Base):
     
     category: Mapped["Category"] = relationship(back_populates="goods")
     minor_shelves: Mapped[List["MinorShelve"]] = relationship(back_populates="good")
+    ordered_goods: Mapped[List["OrderedGoods"]] = relationship(back_populates="good")
     
 
 class MinorShelve(Base):
@@ -71,3 +72,38 @@ class MinorShelve(Base):
         )
     
     good: Mapped["Good"] = relationship(back_populates="minor_shelves")
+
+
+class Order(Base):
+
+    __tablename__ = "orders"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    number: Mapped[int] = mapped_column(INTEGER)
+
+    __table_args__ = (
+        UniqueConstraint('number', name='unique_order'),
+        )
+    
+    ordered_goods: Mapped[List["OrderedGoods"]] = relationship(back_populates="order")
+    
+
+class OrderedGoods(Base):
+
+    __tablename__ = "ordered_goods"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    order_id: Mapped[int] = mapped_column(
+        ForeignKey("orders.id", onupdate="CASCADE", ondelete="CASCADE")
+        )
+    good_id: Mapped[int] = mapped_column(
+        ForeignKey("goods.id", onupdate="CASCADE", ondelete="CASCADE")
+        )
+    quantity: Mapped[int] = mapped_column(INTEGER)
+
+    __table_args__ = (
+        UniqueConstraint('order_id', 'good_id', name='unique_order_and_good'),
+        )
+    
+    good: Mapped["Good"] = relationship(back_populates="ordered_goods") 
+    order: Mapped["Order"] = relationship(back_populates="ordered_goods") 
