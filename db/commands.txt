@@ -1,0 +1,25 @@
+laptop = Category(category="Ноутбук",)
+monitor = Category(category="Монитор",)
+system_block = Category(category="Системный блок")
+clocks = Category(category="Часы")
+microphone = Category(category="Микрофон")
+
+
+shelve_1 = MainShelve(name='A', category_id=1)
+shelve_2 = MainShelve(name='Б', category_id=2)
+shelve_3 = MainShelve(name='В', category_id=3)
+shelve_4 = MainShelve(name='Г', category_id=4)
+shelve_5 = MainShelve(name='А', category_id=5)
+
+
+good_1 = Good(model_name='HP', category_id=1)
+good_2 = Good(model_name='Lenovo', category_id=1)
+good_3 = Good(model_name='Xiaomi', category_id=2)
+good_4 = Good(model_name='Dell', category_id=2)
+good_5 = Good(model_name='Acer', category_id=3)
+good_6 = Good(model_name='Casio', category_id=4)
+good_7 = Good(model_name='Rolex', category_id=4)
+good_8 = Good(model_name='Sennheiser', category_id=5)
+
+# session.add_all([laptop, monitor, system_block, clocks, microphone])
+session.commit()

@@ -38,13 +38,12 @@ class MainShelve(Base):
     __table_args__ = (UniqueConstraint('category_id', name='unique_category'),)
 
     category: Mapped["Category"] = relationship(back_populates="main_shelve")
-    minor_shelves: Mapped[List["MinorShelve"]] = relationship(back_populates="main_shelve")
-
+    
 
 class Good(Base):
 
     __tablename__ = "goods"
-
+    
     id: Mapped[int] = mapped_column(primary_key=True)
     model_name: Mapped[str] = mapped_column(String(50))
     category_id: Mapped[int] = mapped_column(
@@ -54,6 +53,7 @@ class Good(Base):
     __table_args__ = (UniqueConstraint('model_name', name='unique_model'),)
     
     category: Mapped["Category"] = relationship(back_populates="goods")
+    minor_shelves: Mapped[List["MinorShelve"]] = relationship(back_populates="good")
     
 
 class MinorShelve(Base):
@@ -62,13 +62,12 @@ class MinorShelve(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(50))
-    main_shelve_id: Mapped[int] = mapped_column(
-        ForeignKey("main_shelves.id", onupdate="CASCADE", ondelete="CASCADE")
+    good_id: Mapped[int] = mapped_column(
+        ForeignKey("goods.id", onupdate="CASCADE", ondelete="CASCADE")
         )
     
     __table_args__ = (
-        UniqueConstraint('name', 'main_shelve_id', name='unique_minor_shelve_for_main_shelve'),
-        CheckConstraint(name != main_shelve_id.name, name='not_equal_main_shelve')
+        UniqueConstraint('name', 'good_id', name='unique_minor_shelve_for_good'),
         )
     
-    main_shelve: Mapped["MainShelve"] = relationship(back_populates="minor_shelves")
+    good: Mapped["Good"] = relationship(back_populates="minor_shelves")
