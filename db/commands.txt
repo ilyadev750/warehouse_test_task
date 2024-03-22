@@ -28,6 +28,11 @@ order_3 = Order(number=12)
 order_4 = Order(number=13)
 order_5 = Order(number=14)
 
+minor_shelve_1 = MinorShelve(name="V", good_id=8)
+minor_shelve_2 = MinorShelve(name="3", good_id=8)
+minor_shelve_3 = MinorShelve(name="A", good_id=3)
+minor_shelve_4 = MinorShelve(name="M", good_id=3)
+
 ordered_good_1 = OrderedGoods(order_id=1, good_id=1, quantity=2)
 ordered_good_2 = OrderedGoods(order_id=1, good_id=3, quantity=1)
 ordered_good_3 = OrderedGoods(order_id=1, good_id=6, quantity=2)
@@ -38,3 +43,4 @@ ordered_good_7 = OrderedGoods(order_id=3, good_id=4, quantity=2)
 
 # session.add_all([laptop, monitor, system_block, clocks, microphone])
 session.commit()
+

@@ -1,7 +1,13 @@
-from db.engine import engine
-from db.models import Base
+import sys
+from handlers import Handler
 
 
 if __name__ == '__main__':
-    Base.metadata.create_all(engine)
-    print('Success!')
+    args = sys.argv[1:]
+    try: 
+        orders_list = [int(x) for x in args]
+    except ValueError:
+        print(f'Заказ должен содержать только числа, но не строки!')
+        orders_list = []
+    handler = Handler(orders_list=orders_list)
+    handler.run()
