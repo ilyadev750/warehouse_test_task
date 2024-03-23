@@ -20,7 +20,7 @@ class Query:
         query = query.join(Category, Good.category_id == Category.id)
         query = query.join(MainShelve, Category.id == MainShelve.category_id)
         query = query.filter(Order.number.in_(orders_list))
-        query = query.order_by(Category.category)
+        query = query.order_by(MainShelve.name)
         records = query.all()
         return records
 
@@ -32,4 +32,4 @@ class Query:
         query = query.join(Category, Good.category_id == Category.id)
         query = query.order_by(Good.id)
         records = query.all()
-        return records
+        return records 
