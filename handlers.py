@@ -32,7 +32,9 @@ class Handler(Query):
 
     def collect_info_about_minor_shelves(self):
         records = self.get_minor_shelves_for_goods()
-        for minor_shelve, good, category in records:
+        for record in records:
+            minor_shelve = record[0]
+            good = record[1]
             good_minor_shelves = self.minor_shelves.get(good.id)
             if not good_minor_shelves:
                 self.minor_shelves[good.id] = f'{minor_shelve.name}, '
