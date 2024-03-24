@@ -3,7 +3,7 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy import ForeignKey
 from sqlalchemy import UniqueConstraint
 from sqlalchemy.orm import mapped_column
-from sqlalchemy import String, INTEGER
+from sqlalchemy import String, INTEGER, BOOLEAN
 from sqlalchemy.orm import relationship
 from typing import List
 
@@ -22,26 +22,35 @@ class Category(Base):
 
     __table_args__ = (UniqueConstraint('category', name='category'),)
 
-    main_shelve: Mapped["MainShelve"] = relationship(back_populates="category")
     goods: Mapped[List["Good"]] = relationship(back_populates="category")
 
 
-class MainShelve(Base):
-    """Модель главных стеллажей."""
+class Shelve(Base):
+    """Модель стеллажей."""
 
-    __tablename__ = "main_shelves"
+    __tablename__ = "shelves"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(50))
-    category_id: Mapped[int] = mapped_column(
+    shelve: Mapped[str] = mapped_column(String(50))
+
+
+class GoodShelve(Base):
+    """Модель стеллажей."""
+
+    __tablename__ = "good_shelve"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    good_id: Mapped[str] = mapped_column(
         ForeignKey(
-            "goods_categories.id", onupdate="CASCADE", ondelete="CASCADE"
+            "goods.id", onupdate="CASCADE", ondelete="CASCADE"
             )
         )
-
-    __table_args__ = (UniqueConstraint('category_id', name='unique_category'),)
-
-    category: Mapped["Category"] = relationship(back_populates="main_shelve")
+    shelve_id: Mapped[str] = mapped_column(
+        ForeignKey(
+            "shelves.id", onupdate="CASCADE", ondelete="CASCADE"
+            )
+        )
+    is_main: Mapped[bool] = mapped_column(BOOLEAN)
 
 
 class Good(Base):
@@ -60,31 +69,9 @@ class Good(Base):
     __table_args__ = (UniqueConstraint('model_name', name='unique_model'),)
 
     category: Mapped["Category"] = relationship(back_populates="goods")
-    minor_shelves: Mapped[List["MinorShelve"]] = relationship(
-        back_populates="good"
-        )
     ordered_goods: Mapped[List["OrderedGoods"]] = relationship(
         back_populates="good"
         )
-
-
-class MinorShelve(Base):
-    """Модель второстепенных стеллажей."""
-
-    __tablename__ = "minor_shelves"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(50))
-    good_id: Mapped[int] = mapped_column(
-        ForeignKey("goods.id", onupdate="CASCADE", ondelete="CASCADE")
-        )
-
-    __table_args__ = (
-        UniqueConstraint(
-            'name', 'good_id', name='unique_minor_shelve_for_good'),
-        )
-
-    good: Mapped["Good"] = relationship(back_populates="minor_shelves")
 
 
 class Order(Base):

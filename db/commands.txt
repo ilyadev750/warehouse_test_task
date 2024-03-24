@@ -5,11 +5,12 @@ clocks = Category(category="Часы")
 microphone = Category(category="Микрофон")
 
 
-shelve_1 = MainShelve(name='A', category_id=1)
-shelve_2 = MainShelve(name='Б', category_id=2)
-shelve_3 = MainShelve(name='В', category_id=3)
-shelve_4 = MainShelve(name='Г', category_id=4)
-shelve_5 = MainShelve(name='А', category_id=5)
+shelve_1 = Shelve(shelve='А')
+shelve_2 = Shelve(shelve='Б')
+shelve_3 = Shelve(shelve='Ж')
+shelve_4 = Shelve(shelve='3')
+shelve_5 = Shelve(shelve='В')
+shelve_6 = Shelve(shelve='А')
 
 
 good_1 = Good(model_name='HP', category_id=1)
