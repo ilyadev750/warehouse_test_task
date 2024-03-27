@@ -23,10 +23,10 @@ class Handler(Query):
         print(
             f"Страница сборки заказов {', '.join([str(x) for x in self.orders_list])}\n"
             )
-
+        
         for ordered_good, order, good, category, main_shelve in records:
-            if main_shelve.name != self.current_shelve:
-                self.current_shelve = main_shelve.name
+            if main_shelve != self.current_shelve:
+                self.current_shelve = main_shelve
                 print(f'===Стеллаж {self.current_shelve}')
             print(f'{category.category} {good.model_name} (id={good.id})')
             print(f'заказ {order.number}, {ordered_good.quantity} шт')
@@ -39,15 +39,16 @@ class Handler(Query):
 
     def collect_info_about_minor_shelves(self):
         """Обработка информации по второстепенным стеллажам"""
-        records = self.get_minor_shelves_for_goods()
+        query = self.get_main_or_minor_shelves_for_goods(condition=False)
+        records = query.all()
         for record in records:
-            minor_shelve = record[0]
+            minor_shelve = record[3]
             good = record[1]
             good_minor_shelves = self.minor_shelves.get(good.id)
             if not good_minor_shelves:
-                self.minor_shelves[good.id] = f'{minor_shelve.name}, '
+                self.minor_shelves[good.id] = f'{minor_shelve.shelve}'
             else:
-                self.minor_shelves[good.id] += f'{minor_shelve.name}, '
+                self.minor_shelves[good.id] += f', {minor_shelve.shelve}'
 
     def run(self):
         """Начало работы по поиску и обработке информации"""
