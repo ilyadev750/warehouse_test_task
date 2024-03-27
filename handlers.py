@@ -23,7 +23,7 @@ class Handler(Query):
         print(
             f"Страница сборки заказов {', '.join([str(x) for x in self.orders_list])}\n"
             )
-        
+
         for ordered_good, order, good, category, main_shelve in records:
             if main_shelve != self.current_shelve:
                 self.current_shelve = main_shelve

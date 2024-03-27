@@ -14,8 +14,12 @@ class Query:
     def get_all_orders(self, orders_list):
         """Запрос на получение информации по заказанным товарам
         и местах их хранения."""
-        subquery = self.get_main_or_minor_shelves_for_goods(condition=True).subquery()
-        query = session.query(OrderedGoods, Order, Good, Category, subquery.c.shelve)
+        subquery = (self.get_main_or_minor_shelves_for_goods
+                    (condition=True)
+                    .subquery())
+        query = session.query(
+            OrderedGoods, Order, Good, Category, subquery.c.shelve
+            )
         query = query.join(Order, Order.id == OrderedGoods.order_id)
         query = query.join(Good, Good.id == OrderedGoods.good_id)
         query = query.join(Category, Good.category_id == Category.id)
